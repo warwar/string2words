@@ -1,0 +1,61 @@
+version: '3'
+networks:
+  localdev:
+    external: true
+
+#volumes:
+#  dbpg:
+#  centrifugo:
+#  composer_user:
+
+services:
+  t2-nginx:
+    depends_on:
+      - t2-php-fpm
+    image: nginx:1.15.12-alpine
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.t1_kss.entrypoints=web"
+      - "traefik.http.routers.t1_kss.tls=false"
+      - "traefik.http.routers.t1_kss.rule=Host(`t2.kss.local`)"
+      - "traefik.http.services.t1_kss.loadbalancer.server.port=80"
+      - "traefik.http.services.t1_kss.loadbalancer.sticky.cookie=true"
+      - "traefik.http.services.t1_kss.loadbalancer.sticky.cookie.secure=false"
+    volumes:
+      - ./app:/app
+      - ./nginx-conf:/etc/nginx/conf.d
+    ports:
+    - 86:80
+    networks:
+      - localdev
+
+  t2-php-fpm:
+    build:
+      context: ./docker/development/php-fpm
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./app:/app
+    networks:
+      - localdev
+
+  t2-php-cli:
+    build:
+      context: ./docker/development/php-cli
+      dockerfile: Dockerfile
+    restart: "no"
+    user: "1000:1000"
+    working_dir: /app
+    volumes:
+      - ./app:/app
+      - ~/.composer/cache:/home/warwar/.composer/cache
+    networks:
+      - localdev
+
+
+
+
+
+
+
