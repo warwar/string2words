@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Application\Service;
 
 class String2Words

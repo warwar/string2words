@@ -1,8 +1,6 @@
 <?php
 
-
 namespace ApplicationTest\Service;
-
 
 use Application\Service\String2Words;
 use Laminas\Test\PHPUnit\Controller\AbstractControllerTestCase;
@@ -11,7 +9,7 @@ class ServiceTest extends AbstractControllerTestCase
 {
     public function testString2Words()
     {
-        $String2Words = new String2Words;
+        $String2Words = new String2Words();
         $a = $String2Words('Русский язык');
         $this->assertArrayHasKey('Русский', $a);
         $this->assertArrayHasKey('язык', $a);
@@ -53,14 +51,14 @@ class ServiceTest extends AbstractControllerTestCase
     public function testString2WordsErrorEmptyWords()
     {
         $this->expectError();
-        $String2Words = new String2Words;
+        $String2Words = new String2Words();
         $this->assertNull($String2Words('test', ['words' => ""]));
     }
 
     public function testString2WordsErrorEmptyClearChars()
     {
         $this->expectError();
-        $String2Words = new String2Words;
+        $String2Words = new String2Words();
         $this->assertNull($String2Words('test', ['clean_chars' => ""]));
     }
 }
